@@ -1,0 +1,21 @@
+---
+galaxy_info:
+  role_name: vector_role
+  namespace: trashdokidoki
+  author: TrashDokiDoki
+  description: Ansible role for installing and configuring Vector
+  company: none
+  license: MIT
+  min_ansible_version: "2.17"
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - noble
+
+  galaxy_tags:
+    - vector
+    - logs
+    - monitoring
+
+dependencies: []

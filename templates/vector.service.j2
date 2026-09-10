@@ -1,0 +1,15 @@
+[Unit]
+Description=Vector
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ vector_user }}
+Group={{ vector_group }}
+ExecStart=/usr/local/bin/vector --config {{ vector_config_dir }}/vector.yml
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
