@@ -1,0 +1,12 @@
+---
+- name: Destroy Molecule containers
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Remove Docker containers
+      community.docker.docker_container:
+        name: "{{ item }}"
+        state: absent
+      loop: "{{ groups['molecule'] }}"

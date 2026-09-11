@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: molecule
+  gather_facts: true
+
+  tasks:
+    - name: Apply Vector role
+      ansible.builtin.include_role:
+        name: vector_role
+      vars:
+        vector_manage_service: false

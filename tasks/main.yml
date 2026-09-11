@@ -75,3 +75,4 @@
     enabled: true
     state: started
     daemon_reload: true
+  when: vector_manage_service

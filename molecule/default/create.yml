@@ -1,0 +1,20 @@
+---
+- name: Create Molecule containers
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Create Docker containers
+      community.docker.docker_container:
+        name: "{{ item }}"
+        hostname: "{{ item }}"
+        image: "{{ hostvars[item].container_image }}"
+        command: sleep infinity
+        state: started
+        detach: true
+        dns_servers:
+          - 1.1.1.1
+          - 8.8.8.8
+      loop: "{{ groups['molecule'] }}"
+

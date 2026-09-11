@@ -1,0 +1,61 @@
+---
+- name: Verify
+  hosts: molecule
+  gather_facts: false
+
+  tasks:
+    - name: Check Vector binary
+      ansible.builtin.command:
+        cmd: /usr/local/bin/vector --version
+      register: vector_version
+      changed_when: false
+      failed_when: false
+
+    - name: Assert Vector binary works
+      ansible.builtin.assert:
+        that:
+          - vector_version.rc == 0
+          - "'vector' in vector_version.stdout | lower"
+        success_msg: "Vector binary works"
+        fail_msg: "Vector binary does not work"
+
+    - name: Validate Vector configuration
+      ansible.builtin.command:
+        cmd: /usr/local/bin/vector validate /etc/vector/vector.yml
+      register: vector_validate
+      changed_when: false
+      failed_when: false
+
+    - name: Assert Vector configuration is valid
+      ansible.builtin.assert:
+        that:
+          - vector_validate.rc == 0
+        success_msg: "Vector configuration is valid"
+        fail_msg: "Vector configuration is invalid"
+
+    - name: Test Vector startup
+      ansible.builtin.command:
+        cmd: timeout 5s /usr/local/bin/vector --config /etc/vector/vector.yml
+      register: vector_start
+      changed_when: false
+      failed_when: false
+
+    - name: Assert Vector starts successfully
+      ansible.builtin.assert:
+        that:
+          - vector_start.rc == 124
+        success_msg: "Vector starts successfully"
+        fail_msg: "Vector failed to start"
+
+    - name: Check Vector configuration file
+      ansible.builtin.stat:
+        path: /etc/vector/vector.yml
+      register: vector_config
+
+    - name: Assert Vector configuration exists
+      ansible.builtin.assert:
+        that:
+          - vector_config.stat.exists
+          - vector_config.stat.isreg
+        success_msg: "Vector configuration file exists"
+        fail_msg: "Vector configuration file does not exist"
