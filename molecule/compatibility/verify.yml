@@ -1,0 +1,26 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Check Vector binary
+      command: /usr/local/bin/vector --version
+      register: vector_version
+      changed_when: false
+
+    - name: Assert Vector binary works
+      assert:
+        that:
+          - vector_version.rc == 0
+          - "'vector' in vector_version.stdout | lower"
+
+    - name: Validate Vector configuration
+      command: /usr/local/bin/vector validate /etc/vector/vector.yml
+      register: vector_validate
+      changed_when: false
+
+    - name: Assert Vector configuration is valid
+      assert:
+        that:
+          - vector_validate.rc == 0
